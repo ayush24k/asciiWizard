@@ -11,11 +11,13 @@ export class ImageProcessor {
         path: string,
         width: number
     ): Promise<ProcessedImage> {
-        const image = sharp(path).resize({ width }).grayscale();
+        const image = sharp(path).resize({ width, height: Math.floor(width * 0.55), fit: "inside" })
+
 
         const { data, info } = await image
             .raw()
             .toBuffer({ resolveWithObject: true });
+
 
         // data is RGB even in grayscale → take one channel
         const grayscale = new Uint8Array(info.width * info.height);

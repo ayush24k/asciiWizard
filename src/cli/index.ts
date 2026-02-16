@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { Command } from "commander";
+import { convertImageToAscii } from "../application/image/convertImageToAscii";
 
 const program = new Command();
 
@@ -11,14 +12,20 @@ program
 
 program
     .command("image <path>")
-    .description("Converts an image to ASCII art")
-    .option("--width <number>", "output width", "100")
-    .option("--color <color>", "foreground color")
-    .option("--bg <color>", "background color")
-    .action((path, options) => {
-        console.log("Image command triggered");
-        console.log({path, options});
-    })
+    .description("Convert image to ASCII")
+    .option("--width <number>", "Output width", "100")
+    .option("--out <file>", "Save to file")
+    .action(async (path, options) => {
+      try {
+        await convertImageToAscii(path, {
+          width: Number(options.width),
+          output: options.out
+        });
+      } catch (err) {
+        console.error("Error:", err);
+    }
+  });
+
 
 program
   .command("video <path>")
